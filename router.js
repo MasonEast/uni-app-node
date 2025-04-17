@@ -1,7 +1,6 @@
 const Router = require("koa-router");
 const axios = require("axios");
 const router = new Router();
-const crypto = require("crypto");
 const WXBizDataCrypt = require("./WXBizDataCrypt"); // 需要实现这个类
 
 // 微信小程序配置

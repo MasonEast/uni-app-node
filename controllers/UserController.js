@@ -1,40 +1,40 @@
 const User = require("../models/user");
-
+const { generateToken } = require("../utils"); // 引入生成token的函数
 class UserController {
   // 创建用户
-  static async createUser(ctx) {
+  static async createUser(ctx, openid) {
     try {
-      const { username, password, email } = ctx.request.body;
+      const token = generateToken(openid);
 
-      // 验证输入
-      if (!username || !password || !email) {
-        ctx.status = 400;
-        ctx.body = { message: "缺少必要参数" };
-        return;
-      }
+      // const { username, password, email } = ctx.request.body;
+
+      // // 验证输入
+      // if (!username || !password || !email) {
+      //   ctx.status = 400;
+      //   ctx.body = { message: "缺少必要参数" };
+      //   return;
+      // }
 
       // 检查用户是否已存在
-      const existingUser = await User.findOne({
-        $or: [{ username }, { email }],
-      });
-      if (existingUser) {
-        ctx.status = 409;
-        ctx.body = { message: "用户名或邮箱已存在" };
-        return;
-      }
+      // const existingUser = await User.findOne({
+      //   openid,
+      // });
+      // if (existingUser) {
+      //   ctx.status = 409;
+      //   ctx.body = { message: "用户名或邮箱已存在" };
+      //   return;
+      // }
 
       // 创建用户
-      const user = new User({ username, password, email });
+      const user = new User({ openid });
       await user.save();
 
-      ctx.status = 201;
+      ctx.status = 200;
       ctx.body = {
-        message: "用户创建成功",
-        data: {
-          id: user._id,
-          username: user.username,
-          email: user.email,
-          createdAt: user.createdAt,
+        token,
+        userInfo: {
+          openid,
+          // 其他用户信息...
         },
       };
     } catch (error) {
