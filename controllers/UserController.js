@@ -1,42 +1,58 @@
+const axios = require("axios");
+const config = require("../config/config"); // 引入配置文件
+
 const User = require("../models/user");
 const { generateToken } = require("../utils"); // 引入生成token的函数
 class UserController {
-  // 创建用户
-  static async createUser(ctx, openid) {
-    try {
-      const token = generateToken(openid);
+  static async login(ctx) {
+    const { code, userInfo } = ctx.request.body;
 
-      // const { username, password, email } = ctx.request.body;
+    if (!code) {
+      ctx.status = 400;
+      ctx.body = { message: "缺少code参数" };
+      return;
+    }
 
-      // // 验证输入
-      // if (!username || !password || !email) {
-      //   ctx.status = 400;
-      //   ctx.body = { message: "缺少必要参数" };
-      //   return;
-      // }
-
-      // 检查用户是否已存在
-      // const existingUser = await User.findOne({
-      //   openid,
-      // });
-      // if (existingUser) {
-      //   ctx.status = 409;
-      //   ctx.body = { message: "用户名或邮箱已存在" };
-      //   return;
-      // }
-
-      // 创建用户
-      const user = new User({ openid });
-      await user.save();
-
-      ctx.status = 200;
-      ctx.body = {
-        token,
-        userInfo: {
-          openid,
-          // 其他用户信息...
+    // 1. 使用code换取openid和session_key
+    const wxRes = await axios.get(
+      "https://api.weixin.qq.com/sns/jscode2session",
+      {
+        params: {
+          appid: config.appid,
+          secret: config.secret,
+          js_code: code,
+          grant_type: "authorization_code",
         },
-      };
+      }
+    );
+
+    const { openid, session_key, unionid } = wxRes.data;
+
+    if (!openid) {
+      ctx.status = 401;
+      ctx.body = { message: "获取openid失败", error: wxRes.data };
+      return;
+    }
+
+    const user = await User.findOne({ openid });
+    if (!user) {
+      await this.createUser(ctx, openid, userInfo); // 创建用户
+    }
+
+    const token = generateToken(openid, session_key);
+    ctx.status = 200;
+    ctx.body = {
+      token,
+      userInfo,
+    };
+  }
+  // 创建用户
+  static async createUser(ctx, openid, userInfo) {
+    try {
+      // 创建用户
+      const user = new User({ openid, userInfo });
+      await user.save();
+      console.log("用户创建成功");
     } catch (error) {
       ctx.status = 500;
       ctx.body = { message: "服务器错误", error: error.message };

@@ -3,14 +3,25 @@ const { Schema } = mongoose;
 
 // 用户模型
 const userSchema = new Schema({
-  //   username: { type: String, required: true, unique: true },
-  //   password: { type: String, required: true },
-  //   email: { type: String, required: true, unique: true },
-  //   phone: String,
+  phone: String,
   openid: String,
+  userInfo: { type: Object, default: {} }, // 用户信息
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
   status: { type: Number, default: 1 }, // 1-正常 0-禁用
+  avatar: String,
+  nickname: String,
+  intro: String,
+  gender: { type: Number, default: 0 }, // 0-未知 1-男 2-女
+  city: String,
+  province: String,
+  country: String,
+  community: String, // 小区
+  address: String, // 详细地址
+  likes: { type: Array, default: [] }, // 点赞
+  publish: { type: Array, default: [] }, // 发布
+  news: { type: Object, default: {} }, // 消息
+  comment: { type: Array, default: [] }, // 评论
 });
 
 // 添加索引

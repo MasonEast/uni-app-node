@@ -3,57 +3,21 @@ const axios = require("axios");
 const crypto = require("crypto");
 const router = new Router();
 
+const config = require("../config/config"); // 引入配置文件
+const { authMiddleware } = require("../middleware"); // 引入中间件
+
 const UserController = require("../controllers/UserController");
 const User = require("../models/user"); // 引入用户模型
-// 微信小程序配置
-const wxConfig = {
-  appId: "wx64e3f8818fd4ab9c",
-  appSecret: "12909862180c39e485497a54820e9f80",
-};
 
 router.post("/api/wx-login", async (ctx) => {
-  console.log(ctx.request.body, "[[[[[[[[[");
-  const { code } = ctx.request.body;
+  console.log(ctx.request.body, "-------------cccccccccccccccc");
 
-  if (!code) {
-    ctx.status = 400;
-    ctx.body = { message: "缺少code参数" };
-    return;
-  }
-
-  // 1. 使用code换取openid和session_key
-  const wxRes = await axios.get(
-    "https://api.weixin.qq.com/sns/jscode2session",
-    {
-      params: {
-        appid: wxConfig.appId,
-        secret: wxConfig.appSecret,
-        js_code: code,
-        grant_type: "authorization_code",
-      },
-    }
-  );
-  console.log(wxRes.data, "wxRes.data");
-  const { openid, session_key, unionid } = wxRes.data;
-
-  if (!openid) {
-    ctx.status = 401;
-    ctx.body = { message: "获取openid失败", error: wxRes.data };
-    return;
-  }
-
-  // 2. 这里可以查询数据库，看用户是否已存在
-  // 如果是新用户，创建用户记录
-  // 如果是老用户，更新登录信息
-
-  // 3. 生成自定义登录态（token）
-  // const token = generateToken(openid); // 实现你自己的token生成逻辑
-
-  await UserController.createUser(ctx, openid); // 创建用户
+  await UserController.login(ctx); // 创建用户
 });
 
 router.post("/api/update-user-info", async (ctx) => {
   const { userInfo } = ctx.request.body;
+  console.log(ctx.request.body, "-------------cccccccccccccccc");
   const token = ctx.headers.authorization?.split(" ")[1];
 
   if (!token) {
