@@ -1,6 +1,8 @@
 const Router = require("koa-router");
 const axios = require("axios");
 const router = new Router();
+const crypto = require("crypto");
+const WXBizDataCrypt = require("./WXBizDataCrypt"); // 需要实现这个类
 
 // 微信小程序配置
 const wxConfig = {
@@ -96,6 +98,38 @@ router.post("/api/update-user-info", async (ctx) => {
   } catch (error) {
     ctx.status = 500;
     ctx.body = { message: "更新用户信息失败", error: error.message };
+  }
+});
+
+// 解密手机号接口
+router.post("/api/get-phone-number", async (ctx) => {
+  const { encryptedData, iv, code } = ctx.request.body;
+  const token = ctx.headers.authorization?.split(" ")[1];
+
+  if (!token) {
+    ctx.status = 401;
+    return;
+  }
+
+  try {
+    // 验证token并获取用户openid
+    const decoded = verifyToken(token);
+    const openid = decoded.openid;
+
+    // 如果session_key没有保存在服务器，需要用code重新获取
+    const sessionInfo = await getSessionKey(code); // 实现获取session_key的逻辑
+
+    // 解密手机号
+    const pc = new WXBizDataCrypt(wxConfig.appId, sessionInfo.session_key);
+    const data = pc.decryptData(encryptedData, iv);
+
+    // 保存手机号到数据库
+    await User.findOneAndUpdate({ openid }, { phoneNumber: data.phoneNumber });
+
+    ctx.body = { phoneNumber: data.phoneNumber };
+  } catch (error) {
+    ctx.status = 500;
+    ctx.body = { message: "解密手机号失败", error: error.message };
   }
 });
 
