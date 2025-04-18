@@ -22,6 +22,8 @@ const userSchema = new Schema({
   publish: { type: Array, default: [] }, // 发布
   news: { type: Object, default: {} }, // 消息
   comment: { type: Array, default: [] }, // 评论
+  role: String, // 'user', 'admin', 'moderator'等
+  points: Number, // 积分
 });
 
 // 添加索引

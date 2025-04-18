@@ -2,7 +2,7 @@ const axios = require("axios");
 const config = require("../config/config"); // 引入配置文件
 
 const User = require("../models/user");
-const { generateToken } = require("../utils"); // 引入生成token的函数
+const { generateToken, sendSubscribeMessage } = require("../utils"); // 引入生成token的函数
 class UserController {
   static async login(ctx) {
     const { code, userInfo } = ctx.request.body;
@@ -33,6 +33,17 @@ class UserController {
       ctx.body = { message: "获取openid失败", error: wxRes.data };
       return;
     }
+
+    // 示例：发送提醒
+    // sendSubscribeMessage(
+    //   openid,
+    //   "KTWpzp3XwjEZ_JHVEy3Zeu4a0yGX-54JKhje0YKtXiA",
+    //   {
+    //     thing1: { value: "社区新消息" },
+    //     thing2: { value: "您有一条新的回复" },
+    //   }
+    //   // "pages/notifications/notifications"
+    // );
 
     const user = await User.findOne({ openid });
     if (!user) {
