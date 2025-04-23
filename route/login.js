@@ -9,13 +9,13 @@ const { authMiddleware } = require("../middleware"); // 引入中间件
 const UserController = require("../controllers/UserController");
 const User = require("../models/user"); // 引入用户模型
 
-router.post("/api/wx-login", async (ctx) => {
+router.post("/api/user/login", async (ctx) => {
   console.log(ctx.request.body, "-------------cccccccccccccccc");
 
   await UserController.login(ctx); // 创建用户
 });
 
-router.post("/api/update-user-info", async (ctx) => {
+router.post("/api/user/info", async (ctx) => {
   const { userInfo } = ctx.request.body;
   console.log(ctx.request.body, "-------------cccccccccccccccc");
   const token = ctx.headers.authorization?.split(" ")[1];

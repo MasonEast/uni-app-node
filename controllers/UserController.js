@@ -53,8 +53,11 @@ class UserController {
     const token = generateToken(openid, session_key);
     ctx.status = 200;
     ctx.body = {
-      token,
-      userInfo,
+      code: 200,
+      data: {
+        token,
+        userInfo,
+      },
     };
   }
   // 创建用户
