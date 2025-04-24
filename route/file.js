@@ -11,34 +11,49 @@ if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-router.post("/api/upload/image", async (ctx) => {
-  const file = ctx.request.files.file;
+router.post("/api/upload/file", async (ctx) => {
+  const files = ctx.request.files.file;
 
-  if (!file) {
+  if (!files) {
     ctx.status = 400;
     ctx.body = { error: "No file uploaded" };
     return;
   }
 
   try {
-    // 生成唯一文件名
-    const ext = path.extname(file.originalFilename);
-    const filename = `${uuidv4()}${ext}`;
-    const filePath = path.join(uploadDir, filename);
-    console.log(filePath, "filePath", filename);
+    // 处理单个或多个文件
+    const uploadedFiles = Array.isArray(files) ? files : [files];
 
-    const newImage = new File({
-      name: file.originalFilename,
-      path: filename,
-      contentType: file.mimetype,
-      size: file.size,
-    });
+    const results = await Promise.all(
+      uploadedFiles.map(async (file) => {
+        const ext = path.extname(file.originalFilename);
+        const filename = `${uuidv4()}${ext}`;
+        const filePath = path.join(uploadDir, filename);
 
-    await newImage.save();
+        const newImage = new File({
+          name: file.originalFilename,
+          path: filename,
+          contentType: file.mimetype,
+          size: file.size,
+        });
+
+        await newImage.save();
+
+        return {
+          id: newImage._id,
+          fileName: filename,
+          fileUrl: filePath,
+        };
+      })
+    );
 
     ctx.body = {
-      message: "Image uploaded successfully",
-      id: newImage._id,
+      code: 200,
+      message: "文件上传成功",
+      data: {
+        files: results,
+        formData: ctx.request.body,
+      },
     };
   } catch (err) {
     ctx.status = 500;
