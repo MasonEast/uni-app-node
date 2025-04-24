@@ -1,8 +1,27 @@
 const Koa = require("koa");
-const app = new Koa();
+const path = require("path");
+
 const koaBodyparser = require("koa-bodyparser");
+const { koaBody } = require("koa-body");
+const cors = require("@koa/cors");
 const routing = require("./route");
 require("./db"); // 引入数据库连接
+
+const app = new Koa();
+
+app.use(cors());
+// 处理文件上传
+app.use(
+  koaBody({
+    multipart: true, // 支持 multipart-formdata
+    formidable: {
+      maxFileSize: 200 * 1024 * 1024, // 设置最大文件大小，默认200MB
+      keepExtensions: true, // 保持文件扩展名
+      uploadDir: path.join(__dirname, "uploads"), // 上传目录
+    },
+  })
+);
+
 // const router = require("./router");
 // 响应
 // app.use((ctx) => {
