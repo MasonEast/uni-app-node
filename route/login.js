@@ -3,8 +3,7 @@ const axios = require("axios");
 const crypto = require("crypto");
 const router = new Router();
 
-const config = require("../config/config"); // 引入配置文件
-const { authMiddleware } = require("../middleware"); // 引入中间件
+const config = require("../config"); // 引入配置文件
 
 const UserController = require("../controllers/UserController");
 const User = require("../models/user"); // 引入用户模型

@@ -2,7 +2,7 @@ const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const axios = require("axios");
 
-const config = require("../config/config");
+const config = require("../config");
 
 function generateToken(openid, session_key) {
   const token = jwt.sign({ openid, session_key }, config.jwtSecret, {

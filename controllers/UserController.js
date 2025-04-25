@@ -1,5 +1,5 @@
 const axios = require("axios");
-const config = require("../config/config"); // 引入配置文件
+const config = require("../config"); // 引入配置文件
 
 const User = require("../models/user");
 const { generateToken, sendSubscribeMessage } = require("../utils"); // 引入生成token的函数

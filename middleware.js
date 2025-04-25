@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const config = require("./config/config"); // 引入配置文件
+const config = require("./config"); // 引入配置文件
 // 中间件：验证JWT
 
 const authMiddleware = async (ctx, next) => {
