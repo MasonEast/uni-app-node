@@ -18,6 +18,7 @@ const postSchema = new Schema({
     avatarUrl: String,
     weixin: String,
     phone: String,
+    intro: String, // 作者的介绍
   },
   registers: [
     {
@@ -37,8 +38,8 @@ const postSchema = new Schema({
   tags: [String], // 标签
   status: String, // 'published', 'deleted', 'draft'
   isTop: Boolean, // 是否置顶
-  createdAt: Date,
-  updatedAt: Date,
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
 });
 
 module.exports = mongoose.model("Posts", postSchema);

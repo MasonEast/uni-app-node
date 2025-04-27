@@ -9,6 +9,7 @@ const config = {
   expiresIn: "15d", // 15天有效期
   uploadDir,
   protocol: "http",
+  staticPhotoPath: path.join(__dirname, "..", "static", "photos"), // 静态资源图片路径
 };
 
 module.exports = config;

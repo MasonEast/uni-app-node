@@ -3,7 +3,7 @@ const path = require("path");
 const fs = require("fs");
 const router = new Router();
 
-const { uploadDir, protocol } = require("../config");
+const { uploadDir, protocol, staticPhotoPath } = require("../config");
 const { getIPAddress } = require("../utils");
 
 const File = require("../models/file");
@@ -56,6 +56,14 @@ router.post("/api/upload/file", async (ctx) => {
 router.get("/uploads/:filename", async (ctx) => {
   const { filename } = ctx.params;
   const filePath = path.join(uploadDir, filename);
+
+  ctx.set("Content-Type", "image/jpeg");
+  ctx.body = fs.createReadStream(filePath);
+});
+
+router.get("/static/:filename", async (ctx) => {
+  const { filename } = ctx.params;
+  const filePath = path.join(staticPhotoPath, filename);
 
   ctx.set("Content-Type", "image/jpeg");
   ctx.body = fs.createReadStream(filePath);

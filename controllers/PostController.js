@@ -35,6 +35,7 @@ class PostController {
           openid: user.openid, // 作者的openid
           nickname: user.userInfo.nickName, // 作者的昵称
           avatarUrl: user.userInfo.avatarUrl, // 作者的头像
+          intro: user.intro, // 作者的介绍
         },
       });
 
@@ -99,6 +100,34 @@ class PostController {
             // pages: Math.ceil(total / limit)
           },
         },
+      };
+    } catch (error) {
+      ctx.status = error.statusCode || error.status || 500;
+      ctx.body = {
+        success: false,
+        message: error.message,
+      };
+    }
+  }
+
+  static async getPostById(ctx) {
+    try {
+      const { id } = ctx.params;
+
+      if (!id) {
+        ctx.throw(400, "帖子ID不能为空");
+      }
+
+      const post = await Post.findById(id);
+
+      if (!post) {
+        ctx.throw(404, "帖子未找到");
+      }
+
+      ctx.body = {
+        code: 200,
+        success: true,
+        data: post,
       };
     } catch (error) {
       ctx.status = error.statusCode || error.status || 500;
