@@ -31,9 +31,11 @@ class PostController {
         location,
         datetimerange,
         phone,
-        author: user.openid, // 关联用户ID
-        nickname: user.userInfo.nickName, // 用户昵称
-        avatarUrl: user.userInfo.avatarUrl, // 用户头像
+        authorInfo: {
+          openid: user.openid, // 作者的openid
+          nickname: user.userInfo.nickName, // 作者的昵称
+          avatarUrl: user.userInfo.avatarUrl, // 作者的头像
+        },
       });
 
       await post.save();
