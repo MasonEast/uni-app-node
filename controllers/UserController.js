@@ -27,7 +27,7 @@ class UserController {
     );
 
     const { openid, session_key, unionid } = wxRes.data;
-
+    console.log("获取到的openid和session_key:", openid, session_key, userInfo);
     if (!openid) {
       ctx.status = 401;
       ctx.body = { message: "获取openid失败", error: wxRes.data };
@@ -56,6 +56,7 @@ class UserController {
       code: 200,
       data: {
         token,
+        openid,
         userInfo,
       },
     };

@@ -21,6 +21,11 @@ router.post("/api/post/create", auth, async (ctx) => {
   return await PostController.createPost(ctx);
 });
 
+// 报名
+router.post("/api/post/register", auth, async (ctx) => {
+  return await PostController.registerPost(ctx);
+});
+
 router.get("/api/post/photos", async (ctx) => {
   ctx.body = {
     code: 200,

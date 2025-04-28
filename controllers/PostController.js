@@ -55,6 +55,45 @@ class PostController {
     }
   }
 
+  static async registerPost(ctx) {
+    try {
+      const { id } = ctx.request.body;
+
+      // 从认证中间件获取用户信息
+      const user = ctx.state.user;
+
+      await Post.findOneAndUpdate(
+        {
+          _id: id,
+          "registers.openid": { $ne: user.openid },
+        },
+        {
+          $push: {
+            registers: {
+              openid: user.openid,
+              nickname: user.userInfo.nickName,
+              phone: user.phone,
+              avatarUrl: user.userInfo.avatarUrl,
+              createdAt: Date.now(),
+            },
+          },
+        },
+        { returnDocument: "after" }
+      );
+
+      ctx.body = {
+        success: true,
+        code: 200,
+      };
+    } catch (error) {
+      ctx.status = error.statusCode || error.status || 500;
+      ctx.body = {
+        success: false,
+        message: error.message,
+      };
+    }
+  }
+
   static async getPosts(ctx) {
     try {
       // 获取查询参数

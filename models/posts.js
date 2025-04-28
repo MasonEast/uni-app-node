@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 
 // 用户模型
 const postSchema = new Schema({
-  // _id: ObjectId,
+  _id: Schema.Types.ObjectId,
   type: String,
   title: String,
   content: String,
@@ -26,7 +26,7 @@ const postSchema = new Schema({
       nickname: String, // 报名用户的昵称
       phone: String, // 报名用户的手机号
       avatarUrl: String, // 报名用户的头像
-      createdAt: Date, // 报名时间
+      createdAt: { type: Date, default: Date.now }, // 报名时间
       status: String, // 'pending', 'approved', 'rejected'
       weixin: String, // 微信号
     },
