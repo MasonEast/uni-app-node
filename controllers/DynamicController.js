@@ -1,8 +1,8 @@
-const Post = require("../models/posts");
+const Dynamic = require("../models/dynamics");
 
-class PostController {
+class DynamicController {
   // 创建新帖子
-  static async createPost(ctx) {
+  static async createDynamic(ctx) {
     try {
       const {
         type,
@@ -18,11 +18,11 @@ class PostController {
       // 从认证中间件获取用户信息
       const user = ctx.state.user;
 
-      if (!title || !content || !location || datetimerange.length === 0) {
-        ctx.throw(400, "标题、内容、地点、时间是必填项");
+      if (!title || !content) {
+        ctx.throw(400, "标题、内容是必填项");
       }
 
-      const post = new Post({
+      const dynamic = new Dynamic({
         type,
         title,
         content,
@@ -39,12 +39,12 @@ class PostController {
         },
       });
 
-      await post.save();
+      await dynamic.save();
 
       ctx.body = {
         success: true,
         code: 200,
-        data: post,
+        data: dynamic,
       };
     } catch (error) {
       ctx.status = error.statusCode || error.status || 500;
@@ -55,14 +55,14 @@ class PostController {
     }
   }
 
-  static async registerPost(ctx) {
+  static async registerDynamic(ctx) {
     try {
       const { id } = ctx.request.body;
 
       // 从认证中间件获取用户信息
       const user = ctx.state.user;
 
-      await Post.findOneAndUpdate(
+      await Dynamic.findOneAndUpdate(
         {
           _id: id,
           "registers.openid": { $ne: user.openid },
@@ -94,7 +94,7 @@ class PostController {
     }
   }
 
-  static async getPosts(ctx) {
+  static async getDynamics(ctx) {
     try {
       // 获取查询参数
       const {
@@ -117,7 +117,7 @@ class PostController {
       }
 
       // 执行查询
-      const posts = await Post.find(query)
+      const dynamics = await Dynamic.find(query)
         .sort(sort)
         .skip((page - 1) * limit)
         .limit(parseInt(limit))
@@ -125,13 +125,13 @@ class PostController {
         .exec();
 
       // 获取总文档数用于分页
-      //   const total = await Post.countDocuments(query);
+      //   const total = await Dynamic.countDocuments(query);
 
       ctx.body = {
         code: 200,
         success: true,
         data: {
-          posts,
+          dynamics,
           pagination: {
             page: parseInt(page),
             limit: parseInt(limit),
@@ -149,7 +149,7 @@ class PostController {
     }
   }
 
-  static async getPostById(ctx) {
+  static async getDynamicById(ctx) {
     try {
       const { id } = ctx.params;
 
@@ -157,16 +157,68 @@ class PostController {
         ctx.throw(400, "帖子ID不能为空");
       }
 
-      const post = await Post.findById(id);
+      const dynamic = await Dynamic.findById(id);
 
-      if (!post) {
+      if (!dynamic) {
         ctx.throw(404, "帖子未找到");
       }
 
       ctx.body = {
         code: 200,
         success: true,
-        data: post,
+        data: dynamic,
+      };
+    } catch (error) {
+      ctx.status = error.statusCode || error.status || 500;
+      ctx.body = {
+        success: false,
+        message: error.message,
+      };
+    }
+  }
+
+  static async updateDynamicViews(ctx) {
+    try {
+      const { id } = ctx.params;
+
+      if (!id) {
+        ctx.throw(400, "帖子ID不能为空");
+      }
+
+      await Dynamic.findOneAndUpdate(
+        { _id: id },
+        { $inc: { viewCount: 1 } } // 使用 $inc 实现递增
+      );
+
+      ctx.body = {
+        code: 200,
+        success: true,
+      };
+    } catch (error) {
+      ctx.status = error.statusCode || error.status || 500;
+      ctx.body = {
+        success: false,
+        message: error.message,
+      };
+    }
+  }
+
+  static async updateDynamicLikes(ctx) {
+    try {
+      const { id } = ctx.params;
+
+      if (!id) {
+        ctx.throw(400, "帖子ID不能为空");
+      }
+
+      await Dynamic.findOneAndUpdate(
+        { _id: id },
+        { $inc: { likeCount: 1 } } // 使用 $inc 实现递增
+      );
+
+      ctx.body = {
+        code: 200,
+        success: true,
       };
     } catch (error) {
       ctx.status = error.statusCode || error.status || 500;
@@ -178,4 +230,4 @@ class PostController {
   }
 }
 
-module.exports = PostController;
+module.exports = DynamicController;

@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 // 用户模型
-const postSchema = new Schema({
+const dynamicSchema = new Schema({
   // _id: Schema.Types.ObjectId,
   type: String,
   title: String,
@@ -42,4 +42,4 @@ const postSchema = new Schema({
   updatedAt: { type: Date, default: Date.now },
 });
 
-module.exports = mongoose.model("Posts", postSchema);
+module.exports = mongoose.model("Dynamics", dynamicSchema);

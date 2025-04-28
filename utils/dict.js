@@ -18,9 +18,13 @@ const systemDict = {
     { value: 2, text: "上班拼车" },
     { value: 3, text: "代买菜" },
     { value: 4, text: "公园野营" },
-    { value: 5, text: "二手交易" },
-    // { value: 2, text: "上班拼车" },
-    // { value: 2, text: "上班拼车" },
+  ],
+  dynamicType: [
+    { value: 0, text: "便民信息" },
+    { value: 1, text: "二手市场" },
+    { value: 2, text: "吃瓜现场" },
+    { value: 3, text: "个人动态" },
+    { value: 4, text: "其他" },
   ],
 };
 

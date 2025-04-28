@@ -28,7 +28,6 @@ app.use(
       keepExtensions: true, // 仍然保留扩展名
       uploadDir: path.join(__dirname, "uploads"),
       onFileBegin: (name, file) => {
-        console.log("onFileBegin", name, file);
         // 在文件开始处理时重命名文件
         const ext = path.extname(file.originalFilename); // 获取文件扩展名
         const filename = uuidv4() + ext; // 生成UUID + 扩展名
@@ -37,7 +36,6 @@ app.use(
         file.name = filename; // 修改文件名
         file.newFilename = filename; // 更新文件名
         file.originalFilename = filename; // 更新原始文件名
-        console.log("file.path---------", file);
       },
     },
   })
