@@ -1,5 +1,5 @@
 const Dynamic = require("../models/dynamics");
-
+const User = require("../models/user")
 class DynamicController {
   // 创建新帖子
   static async createDynamic(ctx) {
@@ -206,6 +206,7 @@ class DynamicController {
   static async updateDynamicLikes(ctx) {
     try {
       const { id } = ctx.params;
+      const { num } = ctx.query;
 
       if (!id) {
         ctx.throw(400, "帖子ID不能为空");
@@ -213,7 +214,19 @@ class DynamicController {
 
       await Dynamic.findOneAndUpdate(
         { _id: id },
-        { $inc: { likeCount: 1 } } // 使用 $inc 实现递增
+        { $inc: { likeCount: num } } // 使用 $inc 实现递增
+      );
+
+      const user = ctx.state.user;
+
+      await User.findOneAndUpdate(
+        { openid: user.openid },
+        
+        {
+          $push: {
+            likes: id,
+          },
+        },
       );
 
       ctx.body = {

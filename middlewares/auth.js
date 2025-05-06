@@ -13,7 +13,6 @@ module.exports = async (ctx, next) => {
   try {
     // 验证token
     const decoded = jwt.verify(token, config.jwtSecret);
-
     // 查找用户
     const user = await User.findOne({ openid: decoded.openid });
 

@@ -33,6 +33,7 @@ const dynamicSchema = new Schema({
   ], // 报名人数
   viewCount: Number,
   likeCount: Number,
+  collectCount: Number,
   commentCount: Number,
   category: String, // 分类
   tags: [String], // 标签

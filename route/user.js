@@ -2,6 +2,7 @@ const Router = require("koa-router");
 const axios = require("axios");
 const crypto = require("crypto");
 const router = new Router();
+const auth = require("../middlewares/auth"); // 引入认证中间件
 
 const config = require("../config"); // 引入配置文件
 
@@ -13,6 +14,13 @@ router.post("/api/user/login", async (ctx) => {
 
   await UserController.login(ctx); // 创建用户
 });
+
+
+router.get("/api/user/info", auth, async (ctx) => {
+
+    await UserController.getUser(ctx);
+  });
+  
 
 router.post("/api/user/info", async (ctx) => {
   const { userInfo } = ctx.request.body;

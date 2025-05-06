@@ -19,6 +19,7 @@ const userSchema = new Schema({
   community: String, // 小区
   address: String, // 详细地址
   likes: { type: Array, default: [] }, // 点赞
+  collects: { type: Array, default: [] }, // 收藏
   publish: { type: Array, default: [] }, // 发布
   news: { type: Object, default: {} }, // 消息
   comment: { type: Array, default: [] }, // 评论

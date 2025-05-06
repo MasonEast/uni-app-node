@@ -106,16 +106,9 @@ class UserController {
   // 获取单个用户
   static async getUser(ctx) {
     try {
-      const { id } = ctx.params;
-      const user = await User.findById(id).select("-password -__v");
+        const user = ctx.state.user;
 
-      if (!user) {
-        ctx.status = 404;
-        ctx.body = { message: "用户不存在" };
-        return;
-      }
-
-      ctx.body = { data: user };
+      ctx.body = { code: 200, data: user };
     } catch (error) {
       ctx.status = 500;
       ctx.body = { message: "服务器错误", error: error.message };
