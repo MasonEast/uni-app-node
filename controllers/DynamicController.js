@@ -219,14 +219,54 @@ class DynamicController {
 
       const user = ctx.state.user;
 
+      const updateOperation = num == 1 
+        ? { $addToSet: { likes: id } } 
+        : { $pull: { likes: id } };
+
       await User.findOneAndUpdate(
         { openid: user.openid },
-        
-        {
-          $push: {
-            likes: id,
-          },
-        },
+        updateOperation,
+        { new: true } // 返回更新后的文档
+      );
+
+
+      ctx.body = {
+        code: 200,
+        success: true,
+      };
+    } catch (error) {
+      ctx.status = error.statusCode || error.status || 500;
+      ctx.body = {
+        success: false,
+        message: error.message,
+      };
+    }
+  }
+
+  static async updateDynamicCollects(ctx) {
+    try {
+      const { id } = ctx.params;
+      const { num } = ctx.query;
+
+      if (!id) {
+        ctx.throw(400, "帖子ID不能为空");
+      }
+
+      await Dynamic.findOneAndUpdate(
+        { _id: id },
+        { $inc: { collectCount: num } } // 使用 $inc 实现递增
+      );
+
+      const user = ctx.state.user;
+
+      const updateOperation = num == 1 
+        ? { $addToSet: { collects: id } } 
+        : { $pull: { collects: id } };
+
+      await User.findOneAndUpdate(
+        { openid: user.openid },
+        updateOperation,
+        { new: true } // 返回更新后的文档
       );
 
       ctx.body = {

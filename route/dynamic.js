@@ -29,6 +29,10 @@ router.put("/api/dynamic/likes/:id", auth, async (ctx) => {
   return await DynamicController.updateDynamicLikes(ctx);
 });
 
+router.put("/api/dynamic/collects/:id", auth, async (ctx) => {
+    return await DynamicController.updateDynamicCollects(ctx);
+  });
+
 // 报名
 router.post("/api/dynamic/register", auth, async (ctx) => {
   return await DynamicController.registerDynamic(ctx);

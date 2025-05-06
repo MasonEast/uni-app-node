@@ -31,10 +31,10 @@ const dynamicSchema = new Schema({
       weixin: String, // 微信号
     },
   ], // 报名人数
-  viewCount: Number,
-  likeCount: Number,
-  collectCount: Number,
-  commentCount: Number,
+  viewCount: { type: Number, default: 0 },
+  likeCount: { type: Number, default: 0 },
+  collectCount: { type: Number, default: 0 },
+  commentCount: { type: Number, default: 0 },
   category: String, // 分类
   tags: [String], // 标签
   status: String, // 'published', 'deleted', 'draft'
