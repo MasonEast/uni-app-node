@@ -29,6 +29,10 @@ router.put("/api/dynamic/likes/:id", auth, async (ctx) => {
   return await DynamicController.updateDynamicLikes(ctx);
 });
 
+router.put("/api/dynamic/comments/:id", auth, async (ctx) => {
+  return await DynamicController.updateDynamicComments(ctx);
+});
+
 router.put("/api/dynamic/collects/:id", auth, async (ctx) => {
     return await DynamicController.updateDynamicCollects(ctx);
   });

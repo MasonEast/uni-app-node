@@ -19,7 +19,6 @@ module.exports = async (ctx, next) => {
     if (!user) {
       ctx.throw(401, "用户不存在");
     }
-
     // 将用户信息挂载到ctx.state
     ctx.state.user = user;
 
