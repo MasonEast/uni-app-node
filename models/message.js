@@ -14,7 +14,10 @@ const messageSchema = new Schema({
   isRead: { type: Boolean, default: false },     // 是否已读[8](@ref)
   relatedId: Schema.Types.ObjectId,     // 关联业务ID（如互动对象ID）
   metadata: Schema.Types.Mixed,         // 扩展字段（如活动链接）[2](@ref)
-  createdAt: { type: Date, default: Date.now }   // 创建时间[5](@ref)
+  createdAt: { type: Date, default: Date.now },   // 创建时间[5](@ref)
+
+  template: String, // 模板标识符如 "activity_join"
+  variables: mongoose.Schema.Types.Mixed // 动态参数
 });
 
 module.exports = mongoose.model("Message", messageSchema);

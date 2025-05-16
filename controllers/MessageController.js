@@ -52,6 +52,38 @@ class MessageController {
       ctx.body = { code: -1, message: '创建失败' };
     }
   }
+
+  // 消息分类统计
+  static async getMessageStats(ctx) {
+    try {
+        const stats = await Message.aggregate([
+        { $match: { userId: ctx.state.user.id } },
+        { $group: {
+            _id: "$type",
+            total: { $sum: 1 },
+            unread: { 
+                $sum: { $cond: [ { $eq: ["$isRead", false] }, 1, 0 ] }
+            }
+            }
+        }
+        ]);
+        ctx.body = { code: 0, data: stats };
+    } catch (err) {
+        ctx.status = 500;
+        ctx.body = { code: -1, message: '统计失败' };
+    }
+  }
+
+  static async createMessage(ctx) {
+    try {
+        const msg = await Message.create(ctx.request.body);
+        ctx.app.io.emit(`user_${msg.userId}`, msg); // 触发推送[1,4](@ref)
+        ctx.body = { code: 200, data: msg };
+    } catch (err) {
+        ctx.status = 500;
+        ctx.body = { code: -1, message: '创建失败' };
+    }
+  }
 }
 
 module.exports = MessageController;

@@ -2,6 +2,9 @@
 const { createServer } = require('http');
 const { Server } = require('socket.io');
 const Message = require('../models/message');
+const jwt = require("jsonwebtoken");
+const config = require("../config");
+const User = require("../models/user");
 
 module.exports = (app) => {
   const server = createServer(app.callback());
@@ -16,11 +19,22 @@ module.exports = (app) => {
     // 身份验证（与原有JWT中间件结合）
     const token = socket.handshake.query.token;
     // 添加JWT验证逻辑[4,5](@ref)
+    // 验证token
+    const decoded = jwt.verify(token, config.jwtSecret);
+    // 查找用户
+    const user = await User.findOne({ openid: decoded.openid });
+
+    if (!user) {
+        socket.throw(401, "用户不存在");
+    }
+    // 将用户信息挂载到socket.state
+    socket.state.user = user;
+
     next();
   });
 
   io.on('connection', (socket) => {
-    console.log(`用户 ${socket.userId} 已连接`);
+    console.log(`用户 ${socket.state.userId} 已连接`);
 
     // 消息创建监听
     socket.on('new_message', async (msg) => {
@@ -29,7 +43,7 @@ module.exports = (app) => {
     });
 
     // 加入用户专属房间
-    socket.join(`user_${socket.userId}`);
+    socket.join(`user_${socket.state.userId}`);
   });
 
   return server;

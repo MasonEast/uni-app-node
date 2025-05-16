@@ -15,4 +15,7 @@ router.post('/mark-read', MessageController.markAsRead);
 // 管理员专属接口
 router.post('/system-notify', auth, MessageController.createSystemNotify);
 
+// 获取消息统计信息
+router.get('/stats', MessageController.getMessageStats); 
+
 module.exports = router;

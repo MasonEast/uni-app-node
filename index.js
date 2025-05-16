@@ -13,6 +13,8 @@ require("./db"); // 引入数据库连接
 
 const app = new Koa();
 
+const socketServer = require('./socket')(app); // 引入socket.io
+
 app.use(cors());
 // 处理文件上传
 const uploadDir = config.uploadDir; // 上传目录
@@ -41,11 +43,6 @@ app.use(
   })
 );
 
-// const router = require("./router");
-// 响应
-// app.use((ctx) => {
-//   ctx.body = "Hello Koa";
-// });
 app.use(koaBodyparser());
 // 注册路由
 // app.use(router.routes());
@@ -55,3 +52,10 @@ app.use(koaBodyparser());
 routing(app);
 
 app.listen(3000);
+
+// 启动socket服务
+const SOCKET_PORT = process.env.SOCKET_PORT || 3001;
+
+socketServer.listen(SOCKET_PORT, () => {
+  console.log(`Server running on SOCKET_PORT ${SOCKET_PORT}`);
+});
