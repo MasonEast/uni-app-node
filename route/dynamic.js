@@ -1,11 +1,7 @@
 const Router = require("koa-router");
-const path = require("path");
-const fs = require("fs");
 const router = new Router();
 const auth = require("../middlewares/auth"); // 引入认证中间件
 
-const { protocol } = require("../config");
-const { getIPAddress } = require("../utils");
 
 const DynamicController = require("../controllers/DynamicController");
 
