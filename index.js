@@ -11,6 +11,10 @@ const config = require("./config");
 const routing = require("./route");
 require("./db"); // 引入数据库连接
 
+// 启动socket服务
+const SOCKET_PORT = process.env.SOCKET_PORT || 3001;
+
+
 const app = new Koa();
 
 const socketServer = require('./socket')(app); // 引入socket.io
@@ -53,8 +57,6 @@ routing(app);
 
 app.listen(3000);
 
-// 启动socket服务
-const SOCKET_PORT = process.env.SOCKET_PORT || 3001;
 
 socketServer.listen(SOCKET_PORT, () => {
   console.log(`Server running on SOCKET_PORT ${SOCKET_PORT}`);
