@@ -3,8 +3,7 @@ const path = require("path");
 const fs = require("fs");
 const router = new Router();
 
-const { uploadDir, protocol, staticPhotoPath } = require("../config");
-const { getIPAddress } = require("../utils");
+const { uploadDir, uploadUrl, staticPhotoPath, port } = require("../config");
 
 const File = require("../models/file");
 
@@ -44,7 +43,7 @@ router.post("/api/upload/file", async (ctx) => {
       code: 200,
       data: results.map(
         (item) =>
-          `${protocol}://${getIPAddress()}:3000/uploads/${item.fileName}`
+            `${uploadUrl}/${item.fileName}`
       ),
     };
   } catch (err) {
