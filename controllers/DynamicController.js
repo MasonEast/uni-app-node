@@ -1,5 +1,7 @@
 const Dynamic = require("../models/dynamics");
 const User = require("../models/user")
+const Message = require('../models/message');
+
 class DynamicController {
   // 创建新帖子
   static async createDynamic(ctx) {
@@ -212,10 +214,15 @@ class DynamicController {
         ctx.throw(400, "帖子ID不能为空");
       }
 
-      await Dynamic.findOneAndUpdate(
-        { _id: id },
-        { $inc: { likeCount: num } } // 使用 $inc 实现递增
-      );
+ 
+
+          const dynamic = await Dynamic.findOneAndUpdate(
+      { _id: id },
+      { $inc: { likeCount: num } },
+      { new: true, select: 'authorInfo' } // 返回更新后的作者字段
+    );
+
+    if (!dynamic) ctx.throw(404, "动态不存在");
 
       const user = ctx.state.user;
 
@@ -228,6 +235,17 @@ class DynamicController {
         updateOperation,
         { new: true } // 返回更新后的文档
       );
+
+      if (num == 1 ) {
+      await Message.create({
+        type: "interactive",
+        relatedId: user.openid,
+        userId: dynamic.authorInfo.openid,
+        dynamic: id,
+        title: '点赞消息',
+        content: `用户 ${user.userInfo.nickName || ''} 点赞了你的动态`
+      });
+    }
 
 
       ctx.body = {
