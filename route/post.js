@@ -4,7 +4,7 @@ const fs = require("fs");
 const router = new Router();
 const auth = require("../middlewares/auth"); // 引入认证中间件
 
-const { protocol } = require("../config");
+const { protocol, uploadUrl } = require("../config");
 const { getIPAddress } = require("../utils");
 
 const PostController = require("../controllers/PostController");
@@ -34,46 +34,46 @@ router.get("/api/post/photos", async (ctx) => {
       {
         title: "户外活动",
         imgs: [
-          `${protocol}://${getIPAddress()}:3000/static/5.jpg`,
-          `${protocol}://${getIPAddress()}:3000/static/6.jpg`,
-          `${protocol}://${getIPAddress()}:3000/static/7.jpg`,
-          `${protocol}://${getIPAddress()}:3000/static/8.jpg`,
+          `${uploadUrl}/static/5.jpg`,
+          `${uploadUrl}/static/6.jpg`,
+          `${uploadUrl}/static/7.jpg`,
+          `${uploadUrl}/static/8.jpg`,
         ],
       },
       {
         title: "户外活动",
         imgs: [
-          `${protocol}://${getIPAddress()}:3000/static/5.jpg`,
-          `${protocol}://${getIPAddress()}:3000/static/6.jpg`,
-          `${protocol}://${getIPAddress()}:3000/static/7.jpg`,
-          `${protocol}://${getIPAddress()}:3000/static/8.jpg`,
+          `${uploadUrl}/static/5.jpg`,
+          `${uploadUrl}/static/6.jpg`,
+          `${uploadUrl}/static/7.jpg`,
+          `${uploadUrl}/static/8.jpg`,
         ],
       },
       {
         title: "户外活动",
         imgs: [
-          `${protocol}://${getIPAddress()}:3000/static/5.jpg`,
-          `${protocol}://${getIPAddress()}:3000/static/6.jpg`,
-          `${protocol}://${getIPAddress()}:3000/static/7.jpg`,
-          `${protocol}://${getIPAddress()}:3000/static/8.jpg`,
+          `${uploadUrl}/static/5.jpg`,
+          `${uploadUrl}/static/6.jpg`,
+          `${uploadUrl}/static/7.jpg`,
+          `${uploadUrl}/static/8.jpg`,
         ],
       },
       {
         title: "户外活动",
         imgs: [
-          `${protocol}://${getIPAddress()}:3000/static/5.jpg`,
-          `${protocol}://${getIPAddress()}:3000/static/6.jpg`,
-          `${protocol}://${getIPAddress()}:3000/static/7.jpg`,
-          `${protocol}://${getIPAddress()}:3000/static/8.jpg`,
+          `${uploadUrl}/static/5.jpg`,
+          `${uploadUrl}/static/6.jpg`,
+          `${uploadUrl}/static/7.jpg`,
+          `${uploadUrl}/static/8.jpg`,
         ],
       },
       {
         title: "户外活动",
         imgs: [
-          `${protocol}://${getIPAddress()}:3000/static/5.jpg`,
-          `${protocol}://${getIPAddress()}:3000/static/6.jpg`,
-          `${protocol}://${getIPAddress()}:3000/static/7.jpg`,
-          `${protocol}://${getIPAddress()}:3000/static/8.jpg`,
+          `${uploadUrl}/static/5.jpg`,
+          `${uploadUrl}/static/6.jpg`,
+          `${uploadUrl}/static/7.jpg`,
+          `${uploadUrl}/static/8.jpg`,
         ],
       },
     ],

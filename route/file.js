@@ -43,7 +43,7 @@ router.post("/api/upload/file", async (ctx) => {
       code: 200,
       data: results.map(
         (item) =>
-            `${uploadUrl}/${item.fileName}`
+            `${uploadUrl}/uploads/${item.fileName}`
       ),
     };
   } catch (err) {

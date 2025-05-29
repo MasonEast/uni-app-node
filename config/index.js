@@ -1,5 +1,5 @@
 const path = require("path");
-const { getIPAddress } = require("../utils");
+// const { getIPAddress } = require("../utils");
 
 const uploadDir = path.join(__dirname, "..", "uploads");
 
@@ -15,8 +15,8 @@ const config = {
   protocol,
   staticPhotoPath: path.join(__dirname, "..", "static", "photos"), // 静态资源图片路径
   port,
-//   uploadUrl: `${protocol}://${getIPAddress()}:${port}/uploads`,
-  uploadUrl: `https://qgtu108894877.vicp.fun/uploads`,
+//   uploadUrl: `${protocol}://${getIPAddress()}:${port}`,
+  uploadUrl: `https://qgtu108894877.vicp.fun`,
 };
 
 
